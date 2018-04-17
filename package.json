@@ -1,0 +1,8 @@
+{
+  "name": "trala",
+  "version": "0.1.0",
+  "description": "CLI tool for trala-modules",
+  "scripts": {},
+  "license": "ISC",
+  "dependencies": {}
+}
