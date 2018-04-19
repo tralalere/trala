@@ -4,5 +4,8 @@
   "description": "CLI tool for trala-modules",
   "scripts": {},
   "license": "ISC",
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^9.6.5"
+  }
 }
