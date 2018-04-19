@@ -2,8 +2,13 @@
   "name": "trala",
   "version": "0.1.0",
   "description": "CLI tool for trala-modules",
-  "scripts": {},
+  "scripts": {
+    "start": " bin\\trala.cmd",
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
   "license": "ISC",
+  "bin": "bin/index.js",
   "dependencies": {},
   "devDependencies": {
     "@types/node": "^9.6.5"
