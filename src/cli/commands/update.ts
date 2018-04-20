@@ -1,31 +1,24 @@
 import { Install } from "./install";
 import { Remove } from "./remove";
+import { Manifest } from "../../manifest";
 
 export class Update {
     static execute(args: string[]) {
         console.log('update', args);
 
-        const modules: string[] = [];
+        const manifest = Manifest.getInstance();
+        let modules: string[][];
 
-        // TODO get module(s) and version(s) (flag to add to trllr.json)
+        modules = args.slice().map((arg: string) => arg.split('@'));
 
         // TODO if no modules update all modules (?) (maybe not)
 
         modules.forEach((module) => {
-            let moduleName: string;
-            let version: string;
+            Remove.removeModule(module[0]);
 
-            if (module.indexOf('@') > -1) {
-                const moduleData = module.split('@');
-                moduleName = moduleData[0];
-                version = moduleData[1];
-            } else {
-                moduleName = module;
-            }
-
-            Remove.removeModule(moduleName, version);
-
-            Install.installModule(moduleName, version);
+            Install.installModule(module[0], module[1]);
         });
+
+        manifest.updateModules(modules);
     }
 }
