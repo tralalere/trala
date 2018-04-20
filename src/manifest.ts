@@ -12,6 +12,10 @@ export class Manifest {
 
     }
 
+    public removeModules(modules: string[]) {
+
+    }
+
     public updateModules(modules: string[][]) {
 
     }
