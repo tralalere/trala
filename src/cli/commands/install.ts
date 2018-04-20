@@ -14,4 +14,8 @@ export class Install {
 
         // TODO update trllr.json if flagged
     }
+
+    static installModule(name: string, version?: string) {
+
+    }
 }

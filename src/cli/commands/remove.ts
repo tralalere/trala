@@ -10,4 +10,8 @@ export class Remove{
 
         // TODO update files to remove module inclusion
     }
+
+    static removeModule(name: string, version?: string) {
+
+    }
 }
