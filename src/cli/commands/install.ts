@@ -1,21 +1,34 @@
+import { Manifest } from "../../manifest";
+
 export class Install {
     static execute(args: string[]) {
         console.log('install', args);
 
-        // TODO get module(s) and version(s) (flag to add to trllr.json)
+        const manifest = Manifest.getInstance();
+        let modules: string[][];
+        let updateManifest: boolean = true;
 
-        // TODO if no modules, get list from trllr.json
+        modules = args.slice().map((arg: string) => arg.split('@'));
+
+        if (modules.length === 0) {
+            updateManifest = false;
+            modules = manifest.getModules();
+        }
+
+        modules.forEach((module: string[]) => Install.installModule(module[0], module[1]));
+
+        if (updateManifest) {
+            manifest.addModules(modules);
+        }
+    }
+
+    static installModule(name: string, version?: string) {
+        console.log('install module', name, version);
 
         // TODO clone module repository and checkout branch for project
 
         // TODO update version (branches if needed) and push changes
 
         // TODO update files to include module
-
-        // TODO update trllr.json if flagged
-    }
-
-    static installModule(name: string, version?: string) {
-
     }
 }
