@@ -1,6 +1,12 @@
+import { Manifest } from "../../manifest";
+
 export class Init {
     static execute(args: string[]) {
         console.log('init', args);
+
+        console.log(process.cwd());
+
+        const manifest = Manifest.getInstance();
 
         // TODO get project name
 
