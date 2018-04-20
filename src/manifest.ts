@@ -8,7 +8,17 @@ export class Manifest {
         return Manifest.manifest;
     }
 
+    public addModules(modules: string[][]) {
+
+    }
+
     public updateModules(modules: string[][]) {
 
+    }
+
+    public getModules(): string[][] {
+        const modules: string[][] = [];
+
+        return modules;
     }
 }
