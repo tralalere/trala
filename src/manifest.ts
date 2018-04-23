@@ -1,4 +1,4 @@
-import {accessSync, constants, readFileSync, writeFileSync} from 'fs';
+import {accessSync, constants, mkdirSync, readFileSync, writeFileSync} from 'fs';
 
 interface ManifestFormat {
     project: string;
@@ -37,18 +37,29 @@ export class Manifest {
     private manifestData: ManifestFormat;
 
     constructor() {
+        const cwd = process.cwd();
+
         this.manifestPath = `./src/${defaultFilename}.json`;
 
         try {
             accessSync(this.manifestPath, constants.R_OK | constants.W_OK);
         } catch (error) {
-            this.manifestPath = `./${defaultFilename}.json`;
+            const dirName = cwd.substr(cwd.lastIndexOf('\\') + 1);
+
+            if (dirName === 'src') {
+                this.manifestPath = `./${defaultFilename}.json`;
+            } else {
+                try {
+                    accessSync(cwd + '\\src');
+                } catch (error) {
+                    mkdirSync('src');
+                }
+            }
         }
 
         try {
             this.loadManifest();
         } catch (error) {
-            this.manifestPath = `./src/${defaultFilename}.json`;
             this.loadManifestDefault();
         }
     }
