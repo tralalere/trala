@@ -53,6 +53,22 @@ export class Manifest {
         }
     }
 
+    public setProjectName(projectName: string) {
+        this.manifestData.project = projectName;
+    }
+
+    public setRemoteUrl(remoteUrl: string) {
+        this.manifestData.remoteUrl = remoteUrl;
+    }
+
+    public setNamespace(namespace: string) {
+        this.manifestData.namespace = namespace;
+    }
+
+    public setVersion(version: string) {
+        this.manifestData.version = version;
+    }
+
     public addModules(modules: string[][]) {
         modules.forEach((module) => {
             this.addModuleInternal(module[0], module[1]);
@@ -86,6 +102,10 @@ export class Manifest {
         }
 
         return modules;
+    }
+
+    public save() {
+        this.saveManifest();
     }
 
     private addModuleInternal(name: string, version: string) {
