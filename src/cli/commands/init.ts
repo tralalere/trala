@@ -30,7 +30,8 @@ export class Init {
         // TODO add repository as origin remote
         // TODO track master to origin/master
 
-        // TODO clone fuse-core in the appropriate directory
+        // TODO handle fuse-core clone as a parameter
+        execSync(`git clone ${manifest.getRemoteUrl()}${manifest.getNamespace()}/fuse-core src/app/core`);
 
         manifest.save();
     }
