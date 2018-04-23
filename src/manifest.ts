@@ -18,7 +18,7 @@ interface ModuleFormat {
 const defaultFilename: string = 'trllr';
 const defaultData: ManifestFormat = {
     project: '',
-    remoteUrl: 'https://gitlab.abc-informatik.fr/',
+    remoteUrl: 'git@gitlab.abc-informatik.fr:',
     namespace: 'lms_trala',
     modules: {}
 };
