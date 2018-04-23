@@ -1,3 +1,5 @@
+import {accessSync, constants, readFileSync, writeFileSync} from 'fs';
+
 interface ManifestFormat {
     project: string;
     remoteUrl: string;
@@ -13,6 +15,14 @@ interface ModuleFormat {
     repository?: string;
 }
 
+const defaultFilename: string = 'trllr';
+const defaultData: ManifestFormat = {
+    project: '',
+    remoteUrl: 'https://gitlab.abc-informatik.fr/',
+    namespace: 'lms_trala',
+    modules: {}
+};
+
 export class Manifest {
     static manifest: Manifest;
 
@@ -23,12 +33,24 @@ export class Manifest {
         return Manifest.manifest;
     }
 
+    private readonly manifestPath: string;
     private manifestData: ManifestFormat;
 
     constructor() {
-        // TODO get/save manifest path file
+        this.manifestPath = `./src/${defaultFilename}.json`;
 
-        this.loadManifest();
+        try {
+            accessSync(this.manifestPath, constants.R_OK | constants.W_OK);
+        } catch (error) {
+            this.manifestPath = `./${defaultFilename}.json`;
+        }
+
+        try {
+            this.loadManifest();
+        } catch (error) {
+            this.manifestPath = `./src/${defaultFilename}.json`;
+            this.loadManifestDefault();
+        }
     }
 
     public addModules(modules: string[][]) {
@@ -79,10 +101,38 @@ export class Manifest {
     }
 
     private loadManifest() {
-        // TODO load manifest
+        const manifestRaw = readFileSync(this.manifestPath, { encoding: 'utf8' });
+        this.manifestData = JSON.parse(manifestRaw);
+
+        console.log('Manifest loaded', this.manifestData);
+    }
+
+    private loadManifestDefault() {
+        const manifestBuilder = this.duplicateObject(defaultData);
+        this.manifestData = manifestBuilder as ManifestFormat;
+
+        console.log('Default manifest loaded', this.manifestData);
     }
 
     private saveManifest() {
+        writeFileSync(this.manifestPath, JSON.stringify(this.manifestData, null, 2), { encoding: 'utf8' });
 
+        console.log('Manifest saved', this.manifestData);
+    }
+
+    private duplicateObject(object: any): any {
+        const newObject = {};
+
+        for (const property in object) {
+            if (object.hasOwnProperty(property)) {
+                if (typeof object[property] === 'object') {
+                    newObject[property] = this.duplicateObject(object[property]);
+                } else {
+                    newObject[property] = object[property];
+                }
+            }
+        }
+
+        return newObject;
     }
 }
