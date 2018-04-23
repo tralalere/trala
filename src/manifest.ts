@@ -63,7 +63,7 @@ export class Manifest {
 
     public removeModules(modules: string[]) {
         modules.forEach((module) => {
-            this.removeModuleInternal(module[0]);
+            this.removeModuleInternal(module);
         });
 
         this.saveManifest();
