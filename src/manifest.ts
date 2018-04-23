@@ -80,6 +80,22 @@ export class Manifest {
         this.manifestData.version = version;
     }
 
+    public getProjectName(): string {
+        return this.manifestData.project;
+    }
+
+    public getRemoteUrl(): string {
+        return this.manifestData.remoteUrl;
+    }
+
+    public getNamespace(): string {
+        return this.manifestData.namespace;
+    }
+
+    public getVersion(): string {
+        return this.manifestData.version;
+    }
+
     public addModules(modules: string[][]) {
         modules.forEach((module) => {
             this.addModuleInternal(module[0], module[1]);
