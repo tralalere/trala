@@ -9,7 +9,12 @@
   },
   "license": "ISC",
   "bin": "bin/index.js",
-  "dependencies": {},
+  "dependencies": {
+    "@types/fs-extra": "^5.0.2",
+    "@types/semver": "^5.5.0",
+    "fs-extra": "^5.0.0",
+    "semver": "^5.5.0"
+  },
   "devDependencies": {
     "@types/node": "^9.6.5"
   }
