@@ -1,5 +1,7 @@
 import { Manifest } from "../../manifest";
 import {execSync} from "child_process";
+import * as semver from "semver";
+import {removeSync} from "fs-extra";
 
 export class Install {
     static manifest: Manifest;
@@ -34,6 +36,7 @@ export class Install {
         const rootDir: string = process.cwd();
         const branchName: string = `project-${this.projectName}`;
         let branches: string[];
+        let tags: string[];
         let branchPresent: boolean = false;
         let branchLocal: boolean = false;
         let currentVersion: string;
@@ -55,24 +58,68 @@ export class Install {
             branchLocal = branches.some((branch: string) => branch.indexOf('remotes') === -1);
         }
 
-        // TODO if project branch exists, get current version
+        if (branchLocal) {
+            execSync(`git checkout ${branchName}`);
 
-        // TODO list tags
+            if (branchPresent) {
+                execSync(`git pull origin/${branchName}`);
+            }
+        } else if (branchPresent) {
+            execSync(`git checkout -b ${branchName} origin/${branchName}`);
+            branchLocal = true;
+        }
 
-        if (version) {
-            // TODO check if version is present
-            useVersion = version;
+        if (branchLocal) {
+            currentVersion = execSync(`git describe --tags --abbrev=0 ${branchName}`, { encoding: 'utf8' }).split('\n')[0];
+            currentVersion = semver.valid(currentVersion);
+        }
+
+        tags = execSync('git tag', { encoding: 'utf8' })
+            .split('\n')
+            .map((tag: string) => semver.valid(tag))
+            .filter((tag: string) => tag);
+
+        if (semver.valid(version)) {
+            if (currentVersion) {
+                if (semver.gt(version, currentVersion)) {
+                    useVersion = semver.valid(version);
+                } else {
+                    useVersion = currentVersion;
+                }
+            } else {
+                useVersion = semver.valid(version);
+            }
         } else if (currentVersion) {
             useVersion = currentVersion;
         } else {
-            // TODO get latest version from tags
-            useVersion = '0.1.0'
+            if (tags.length) {
+                useVersion = tags.pop();
+            }
         }
 
         // TODO update version (branches if needed) and push changes
+        if (useVersion) {
+            if (useVersion !== currentVersion) {
+                if (!branchLocal) {
+                    execSync(`git checkout ${useVersion}`);
+                    execSync(`git branch ${branchName}`);
+                } else {
+                    execSync(`git merge ${useVersion}`);
+                }
+
+                execSync(`git push -u origin ${branchName}`);
+            }
+        }
+
         process.chdir(rootDir);
 
-        this.includeModule(name);
+        if (useVersion) {
+            this.includeModule(name);
+        } else {
+            removeSync(`src/app/@modules/${name}`);
+
+            console.log('No suiting version found, module was not installed');
+        }
 
         return useVersion;
     }
