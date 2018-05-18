@@ -1,0 +1,10 @@
+{
+  "schematics": {
+    "module": {
+      "aliases": [ "m" ],
+      "factory": "./module",
+      "description": "Create a Tralalere module.",
+      "schema": "./module/schema.json"
+    }
+  }
+}
