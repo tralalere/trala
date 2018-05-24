@@ -11,7 +11,7 @@ import * as ts from 'typescript';
 import { addImportToModule } from '@schematics/angular/utility/ast-utils';
 import {Change, InsertChange} from '@schematics/angular/utility/change';
 import { Schema as ModuleOptions } from './schema';
-import {addServiceToConstructor} from "../utility/update-files";
+import {addServiceToInstantiator} from "../utility/update-files";
 
 
 function addDeclarationsToNgModule(options: ModuleOptions, modules: string[]): Rule {
@@ -76,7 +76,7 @@ function addInitializationToService(options: ModuleOptions, services: string[]):
         const changes: Change[] = [];
 
         for (const service of services) {
-            changes.push(...addServiceToConstructor(source, classPath,
+            changes.push(...addServiceToInstantiator(source, classPath,
                 strings.classify(service),
                 relativePath));
         }

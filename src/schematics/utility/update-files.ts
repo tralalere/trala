@@ -1,23 +1,52 @@
 import * as ts from 'typescript';
-import {Change} from "@schematics/angular/utility/change";
-import {findNodes} from "@schematics/angular/utility/ast-utils";
+import {Change, InsertChange} from "@schematics/angular/utility/change";
+import {getSourceNodes} from "@schematics/angular/utility/ast-utils";
+import {decamelize} from "@angular-devkit/core/src/utils/strings";
+import {insertImport} from "@schematics/angular/utility/route-utils";
 
-export function addServiceToConstructor(source: ts.SourceFile,
+export function addServiceToInstantiator(source: ts.SourceFile,
                                         classPath: string,
                                         serviceName: string,
-                                        importPath: string): Change[] {
-    const classConstructor: ts.Node[] = findNodes(source, ts.SyntaxKind.ConstructorKeyword);
+                                        importPath: string | null = null): Change[] {
+    const changes: Change[] = [];
+    const serviceVar = decamelize(serviceName);
+    const nodes = getSourceNodes(source);
+    const node = nodes.filter((node: ts.Node) => node.kind === ts.SyntaxKind.Constructor )[0] as ts.ConstructorDeclaration;
 
-    // TODO get nodes starting at the first parameter (i think ?)
+    let position: number;
+    let toInsert: string;
 
-    // TODO check if service is not yet in parameters
+    if (!node || !node.parameters) {
+        console.log('No constructor node');
+        return changes;
+    }
 
-    // TODO get indentation
+    position = node.parameters.end;
 
-    // TODO insert service call with correction position (with InsertChange)
+    const params = node.parameters.filter((parameter: ts.ParameterDeclaration) => parameter.type.getText() === serviceName);
+    if (params.length > 0) {
+        console.log('Service already instantiated');
+        return changes;
+    }
 
-    // TODO insert import
+    if (node.parameters.length == 0) {
+        toInsert = `private ${serviceVar}: ${serviceName}`;
+    } else {
+        const text = node.parameters[node.parameters.length - 1].getFullText(source);
+        const matches = text.match(/^\r?\n\s*/);
 
-    // TODO return the changes
-    return [];
+        if (matches.length > 0) {
+            toInsert = `,${matches[0]}private ${serviceVar}: ${serviceName}`;
+        } else {
+            toInsert = `, private ${serviceVar}: ${serviceName}`;
+        }
+    }
+
+    changes.push(new InsertChange(classPath, position, toInsert));
+
+    if (importPath !== null) {
+        changes.push(insertImport(source, classPath, serviceName, importPath));
+    }
+
+    return changes;
 }
