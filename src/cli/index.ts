@@ -31,7 +31,10 @@ export class CLI {
                 Init.execute(this.arguments);
                 break;
             case 'install':
-                Install.execute(this.arguments);
+                Install.execute(this.arguments, false);
+                break;
+            case 'include':
+                Install.execute(this.arguments, true);
                 break;
             case 'update':
                 Update.execute(this.arguments);

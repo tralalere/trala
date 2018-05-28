@@ -2,12 +2,16 @@ import { Manifest } from "../../manifest";
 import {execSync} from "child_process";
 import * as semver from "semver";
 import {removeSync} from "fs-extra";
+import {JsonObject, normalize, virtualFs} from '@angular-devkit/core';
+import {NodeJsSyncHost} from "@angular-devkit/core/node";
+import {NodeWorkflow} from "@angular-devkit/schematics/tools";
+import {DryRunEvent, UnsuccessfulWorkflowExecution} from "@angular-devkit/schematics";
 
 export class Install {
     static manifest: Manifest;
     static projectName: string;
 
-    static execute(args: string[]) {
+    static execute(args: string[], includeOnly: boolean) {
         console.log('install', args);
 
         this.manifest = Manifest.getInstance();
@@ -22,7 +26,14 @@ export class Install {
             modules = this.manifest.getModules();
         }
 
-        modules.forEach((module: string[]) => module[1] = this.installModule(module[0], module[1]));
+        if (includeOnly) {
+            modules.forEach((module: string[]) => this.includeModule(module[0]));
+            return;
+        }
+
+        modules = modules
+            .map((module: string[]) => [module[0], this.installModule(module[0], module[1])])
+            .filter((module: string[]) => !!module[1]);
 
         if (updateManifest) {
             this.manifest.addModules(modules);
@@ -31,7 +42,6 @@ export class Install {
 
     static installModule(name: string, version?: string): string {
         console.log('install module', name, version);
-
 
         const rootDir: string = process.cwd();
         const branchName: string = `project-${this.projectName}`;
@@ -42,7 +52,8 @@ export class Install {
         let currentVersion: string;
         let useVersion: string;
 
-        execSync(`git clone ${this.manifest.getRemoteUrl()}${this.manifest.getNamespace()}/module-${name}-front src/app/@modules/${name}`);
+        execSync(`git clone ${this.manifest.getRemoteUrl()}${this.manifest.getNamespace()}/${name}-module src/app/@modules/${name}`);
+        // execSync(`git clone ${this.manifest.getRemoteUrl()}${this.manifest.getNamespace()}/module-${name}-front src/app/@modules/${name}`);
         process.chdir(`src/app/@modules/${name}`);
 
         execSync('git fetch origin');
@@ -125,7 +136,47 @@ export class Install {
     }
 
     static includeModule(name: string) {
-        // TODO update files to include module
+        const fsHost = new virtualFs.ScopedHost(new NodeJsSyncHost(), normalize(process.cwd()));
+        const workflow = new NodeWorkflow(fsHost, {dryRun: false, force: false});
 
+        workflow.reporter.subscribe((event: DryRunEvent) => {
+            switch (event.kind) {
+                case 'error':
+                    console.log('Error:', event.path, event.description);
+                    break;
+                case 'update':
+                    console.log('Update:', event.path, event.content.length, 'bytes');
+                    break;
+                case 'create':
+                    console.log('Create:', event.path,event.content.length, 'bytes');
+                    break;
+                case 'delete':
+                    console.log('Delete:', event.path);
+                    break;
+                case 'rename':
+                    console.log('Rename:', event.path, 'to', event.to);
+                    break;
+            }
+        });
+
+        console.log(process.cwd());
+
+        workflow.execute({
+            collection: 'trala',
+            schematic: 'module',
+            options: {name}
+        })
+        .subscribe({
+            error(err: Error) {
+                if (err instanceof  UnsuccessfulWorkflowExecution) {
+                    console.log('The Schematic workflow failed.');
+                } else {
+                    console.log('Error somewhere', err.stack);
+                }
+            },
+            complete() {
+                console.log('Workflow done !');
+            }
+        });
     }
 }
