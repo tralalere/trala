@@ -1,4 +1,5 @@
 import {Manifest} from "../../manifest";
+import {removeSync} from "fs-extra";
 
 export class Remove{
     static execute(args: string[]) {
@@ -17,8 +18,13 @@ export class Remove{
     static removeModule(name: string) {
         console.log('remove module', name);
 
-        // TODO delete module repository
+        this.excludeModule(name);
 
-        // TODO update files to remove module inclusion
+        removeSync(`src/app/@modules/${name}`);
+    }
+
+    static excludeModule(name: string) {
+        // TODO update files to remove module inclusion*
+
     }
 }
