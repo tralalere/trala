@@ -1,0 +1,16 @@
+{
+  "schematics": {
+    "addModule": {
+      "aliases": [ "am" ],
+      "factory": "./add-module",
+      "description": "Add a Tralalere module.",
+      "schema": "./add-module/schema.json"
+    },
+    "removeModule": {
+      "aliases": [ "rm" ],
+      "factory": "./remove-module",
+      "description": "Remove a Tralalere module.",
+      "schema": "./remove-module/schema.json"
+    }
+  }
+}
