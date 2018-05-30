@@ -1,5 +1,6 @@
 import {Manifest} from "../../manifest";
 import {removeSync} from "fs-extra";
+import {executeSchematics} from "../../schematics";
 
 export class Remove{
     static execute(args: string[]) {
@@ -24,7 +25,6 @@ export class Remove{
     }
 
     static excludeModule(name: string) {
-        // TODO update files to remove module inclusion*
-
+        executeSchematics('trala', 'removeModule', {name});
     }
 }
