@@ -1,6 +1,6 @@
 import * as ts from 'typescript';
-import {Change, InsertChange} from "@schematics/angular/utility/change";
-import {getSourceNodes} from "@schematics/angular/utility/ast-utils";
+import {Change, InsertChange, RemoveChange} from "@schematics/angular/utility/change";
+import {getDecoratorMetadata, getSourceNodes} from "@schematics/angular/utility/ast-utils";
 import {decamelize} from "@angular-devkit/core/src/utils/strings";
 import {insertImport} from "@schematics/angular/utility/route-utils";
 
@@ -47,6 +47,96 @@ export function addServiceToInstantiator(source: ts.SourceFile,
     if (importPath !== null) {
         changes.push(insertImport(source, classPath, serviceName, importPath));
     }
+
+    return changes;
+}
+
+export function listImports(source: ts.SourceFile,
+                            fromPattern: string,
+                            removeImports: boolean): [string[], Change[]] {
+    const imports: string[] = [];
+    const changes: Change[] = [];
+    const nodes = getSourceNodes(source);
+
+    nodes
+        .filter((node: ts.Node) => node.kind === ts.SyntaxKind.ImportDeclaration)
+        .forEach((node: ts.ImportDeclaration) => {
+            const modulePath = (node.moduleSpecifier as ts.StringLiteral).text;
+
+            if (modulePath.indexOf(fromPattern) > -1) {
+                if (node.importClause) {
+                    if (removeImports) {
+                        changes.push(new RemoveChange(modulePath, node.pos, node.getText(source)));
+                    }
+
+                    const importClause = (node.importClause as ts.ImportClause);
+
+                    if (importClause.namedBindings.kind === ts.SyntaxKind.NamedImports) {
+                        imports.push(...(importClause.namedBindings as ts.NamedImports).elements
+                            .map((element: ts.ImportSpecifier) => element.name.text));
+                    } else if (importClause.namedBindings.kind === ts.SyntaxKind.NamespaceImport) {
+                        imports.push((importClause.namedBindings as ts.NamespaceImport).name.text);
+                    }
+                }
+            }
+        });
+
+    return [imports, changes];
+}
+
+export function removeFromNgModule(source: ts.SourceFile,
+                                   sourcePath: string,
+                                   imports: string[]) : Change[] {
+    const changes: Change[] = [];
+    const decorator: ts.ObjectLiteralExpression = getDecoratorMetadata(source, 'NgModule', '@angular/core')[0] as ts.ObjectLiteralExpression;
+
+    if (decorator) {
+        decorator.properties
+            .filter(node => node.kind === ts.SyntaxKind.PropertyAssignment)
+            .filter((node: ts.PropertyAssignment) => node.initializer.kind === ts.SyntaxKind.ArrayLiteralExpression)
+            .forEach((node: ts.PropertyAssignment) => {
+                const arrayLiteral = node.initializer as ts.ArrayLiteralExpression;
+
+                arrayLiteral.elements.forEach(element => {
+                    switch (element.kind) {
+                        case ts.SyntaxKind.Identifier:
+                            if (imports.indexOf((element as ts.Identifier).text) > -1) {
+                                changes.push(new RemoveChange(sourcePath, element.pos, source.text.substring(element.pos, element.end + (source.text[element.end] === ',' ? 1 : 0))));
+                            }
+                            break;
+                        case ts.SyntaxKind.PropertyAccessExpression:
+                            const identifier = element.getText().split('.')[0];
+                            if (imports.indexOf(identifier) > -1) {
+                                changes.push(new RemoveChange(sourcePath, element.pos, source.text.substring(element.pos, element.end + (source.text[element.end] === ',' ? 1 : 0))));
+                            }
+                            break;
+                    }
+                });
+            });
+    }
+
+    return changes;
+}
+
+export function removeFromInstantiator(source: ts.SourceFile,
+                                       sourcePath: string,
+                                       imports: string[]): Change[] {
+    const changes: Change[] = [];
+    const nodes = getSourceNodes(source);
+    const node = nodes.filter((node: ts.Node) => node.kind === ts.SyntaxKind.Constructor )[0] as ts.ConstructorDeclaration;
+
+    if (!node || !node.parameters) {
+        console.log('No constructor node');
+        return changes;
+    }
+
+    // console.log(node.getText(source));
+
+    node.parameters.forEach((parameter: ts.ParameterDeclaration) => {
+        if (imports.indexOf(parameter.type.getText(source)) > -1) {
+            changes.push(new RemoveChange(sourcePath, parameter.pos, source.text.substring(parameter.pos, parameter.end + (source.text[parameter.end] === ',' ? 1 : 0))));
+        }
+    });
 
     return changes;
 }
