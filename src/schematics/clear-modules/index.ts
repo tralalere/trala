@@ -8,7 +8,7 @@ import {
     chain,
 } from '@angular-devkit/schematics';
 import * as ts from 'typescript';
-import {Change, InsertChange} from '@schematics/angular/utility/change';
+import {Change, RemoveChange} from '../utility/change';
 import { Schema as ModuleOptions } from './schema';
 import {
     listImports,
@@ -35,8 +35,9 @@ function clearNgModule(): Rule {
 
         const recorder = host.beginUpdate(modulePath);
         for (const change of changes) {
-            if (change instanceof InsertChange) {
-                recorder.insertLeft(change.pos, change.toAdd);
+            if (change instanceof RemoveChange) {
+                console.log(change.description);
+                recorder.remove(change.pos, change.toRemove.length);
             }
         }
 
@@ -65,8 +66,9 @@ function clearInstantiator(): Rule {
 
         const recorder = host.beginUpdate(classPath);
         for (const change of changes) {
-            if (change instanceof InsertChange) {
-                recorder.insertLeft(change.pos, change.toAdd);
+            if (change instanceof RemoveChange) {
+                console.log(change.description);
+                recorder.remove(change.pos, change.toRemove.length);
             }
         }
 

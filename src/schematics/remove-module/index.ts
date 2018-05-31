@@ -9,7 +9,7 @@ import {
 } from '@angular-devkit/schematics';
 import * as ts from 'typescript';
 import { addImportToModule } from '@schematics/angular/utility/ast-utils';
-import {Change, InsertChange} from '@schematics/angular/utility/change';
+import {Change, InsertChange} from '../utility/change';
 import { Schema as ModuleOptions } from './schema';
 import {addServiceToInstantiator} from "../utility/update-files";
 

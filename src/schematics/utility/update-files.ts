@@ -1,5 +1,5 @@
 import * as ts from 'typescript';
-import {Change, InsertChange, RemoveChange} from "@schematics/angular/utility/change";
+import {Change, InsertChange, RemoveChange} from "../utility/change";
 import {getDecoratorMetadata, getSourceNodes} from "@schematics/angular/utility/ast-utils";
 import {decamelize} from "@angular-devkit/core/src/utils/strings";
 import {insertImport} from "@schematics/angular/utility/route-utils";
