@@ -6,6 +6,7 @@ npm-debug.log
 *.ts
 !*.d.ts
 test/
+test*
 src/
 !*.metadata.json
 !dist/*.js
