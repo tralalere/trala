@@ -6,6 +6,12 @@
       "description": "Add a Tralalere module.",
       "schema": "./add-module/schema.json"
     },
+    "clearModules": {
+      "aliases": [ "cm" ],
+      "factory": "./clear-modules",
+      "description": "Clear all Tralalere modules from project.",
+      "schema": "./clear-modules/schema.json"
+    },
     "removeModule": {
       "aliases": [ "rm" ],
       "factory": "./remove-module",
