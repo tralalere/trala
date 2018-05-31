@@ -66,7 +66,7 @@ export function listImports(source: ts.SourceFile,
             if (modulePath.indexOf(fromPattern) > -1) {
                 if (node.importClause) {
                     if (removeImports) {
-                        changes.push(new RemoveChange(modulePath, node.pos, node.getText(source)));
+                        changes.push(new RemoveChange(modulePath, node.pos, node.getFullText(source)));
                     }
 
                     const importClause = (node.importClause as ts.ImportClause);
