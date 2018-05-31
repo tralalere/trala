@@ -98,16 +98,17 @@ export function removeFromNgModule(source: ts.SourceFile,
                 const arrayLiteral = node.initializer as ts.ArrayLiteralExpression;
 
                 arrayLiteral.elements.forEach(element => {
+                    const position = element.pos - (element.pos > 0 && source.text[element.pos - 1] === ',' ? 1 : 0);
                     switch (element.kind) {
                         case ts.SyntaxKind.Identifier:
                             if (imports.indexOf((element as ts.Identifier).text) > -1) {
-                                changes.push(new RemoveChange(sourcePath, element.pos, source.text.substring(element.pos, element.end + (source.text[element.end] === ',' ? 1 : 0))));
+                                changes.push(new RemoveChange(sourcePath, position, source.text.substring(position, element.end)));
                             }
                             break;
                         case ts.SyntaxKind.PropertyAccessExpression:
                             const identifier = element.getText().split('.')[0];
                             if (imports.indexOf(identifier) > -1) {
-                                changes.push(new RemoveChange(sourcePath, element.pos, source.text.substring(element.pos, element.end + (source.text[element.end] === ',' ? 1 : 0))));
+                                changes.push(new RemoveChange(sourcePath, position, source.text.substring(position, element.end)));
                             }
                             break;
                     }
