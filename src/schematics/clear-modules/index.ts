@@ -36,7 +36,6 @@ function clearNgModule(): Rule {
         const recorder = host.beginUpdate(modulePath);
         for (const change of changes) {
             if (change instanceof RemoveChange) {
-                console.log(change.description);
                 recorder.remove(change.pos, change.toRemove.length);
             }
         }
