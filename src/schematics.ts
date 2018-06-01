@@ -3,6 +3,12 @@ import {NodeWorkflow} from "@angular-devkit/schematics/tools";
 import {normalize, virtualFs} from "@angular-devkit/core";
 import {NodeJsSyncHost} from "@angular-devkit/core/node";
 
+/**
+ * Execute a Schematic
+ * @param {string} collectionName (name or path to the collection)
+ * @param {string} schematicsName (name of the schematic specified in the collection)
+ * @param options (object passing data to the schematic)
+ */
 export function executeSchematics(collectionName: string, schematicsName: string, options: any) {
     const fsHost = new virtualFs.ScopedHost(new NodeJsSyncHost(), normalize(process.cwd()));
     const workflow = new NodeWorkflow(fsHost, {dryRun: false, force: false});

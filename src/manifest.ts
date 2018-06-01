@@ -1,5 +1,8 @@
 import {accessSync, constants, mkdirSync, readFileSync, writeFileSync} from 'fs';
 
+/**
+ * Object format for the manifest
+ */
 interface ManifestFormat {
     project: string;
     remoteUrl: string;
@@ -8,6 +11,9 @@ interface ManifestFormat {
     modules: {[name: string]: ModuleFormat};
 }
 
+/**
+ * Object format for a module in the manifest
+ */
 interface ModuleFormat {
     version: string;
     remoteUrl?: string;
@@ -23,6 +29,9 @@ const defaultData: ManifestFormat = {
     modules: {}
 };
 
+/**
+ * Represents the manifest and facilitates operations on it
+ */
 export class Manifest {
     static manifest: Manifest;
 
@@ -64,38 +73,74 @@ export class Manifest {
         }
     }
 
+    /**
+     * Set the project name in the manifest
+     * @param {string} projectName
+     */
     public setProjectName(projectName: string) {
         this.manifestData.project = projectName;
     }
 
+    /**
+     * Set remote Url
+     * @param {string} remoteUrl
+     */
     public setRemoteUrl(remoteUrl: string) {
         this.manifestData.remoteUrl = remoteUrl;
     }
 
+    /**
+     * Set namespace
+     * @param {string} namespace
+     */
     public setNamespace(namespace: string) {
         this.manifestData.namespace = namespace;
     }
 
+    /**
+     * Set version
+     * @param {string} version
+     */
     public setVersion(version: string) {
         this.manifestData.version = version;
     }
 
+    /**
+     * Retrieve project name
+     * @returns {string}
+     */
     public getProjectName(): string {
         return this.manifestData.project;
     }
 
+    /**
+     * Retrieve remote Url
+     * @returns {string}
+     */
     public getRemoteUrl(): string {
         return this.manifestData.remoteUrl;
     }
 
+    /**
+     * Retrieve namespace
+     * @returns {string}
+     */
     public getNamespace(): string {
         return this.manifestData.namespace;
     }
 
+    /**
+     * Retrieve version of the project
+     * @returns {string}
+     */
     public getVersion(): string {
         return this.manifestData.version;
     }
 
+    /**
+     * Add a list of modules
+     * @param {string[][]} modules (Array of [moduleName, moduleVersion])
+     */
     public addModules(modules: string[][]) {
         modules.forEach((module) => {
             this.addModuleInternal(module[0], module[1]);
@@ -104,6 +149,10 @@ export class Manifest {
         this.saveManifest();
     }
 
+    /**
+     * Remove a list of modules
+     * @param {string[]} modules
+     */
     public removeModules(modules: string[]) {
         modules.forEach((module) => {
             this.removeModuleInternal(module);
@@ -112,6 +161,10 @@ export class Manifest {
         this.saveManifest();
     }
 
+    /**
+     * Update module version
+     * @param {string[][]} modules (Array of [moduleName, moduleVersion])
+     */
     public updateModules(modules: string[][]) {
         modules.forEach((module) => {
             this.removeModuleInternal(module[0]);
@@ -121,6 +174,10 @@ export class Manifest {
         this.saveManifest();
     }
 
+    /**
+     * Retrieve the list of modules installed
+     * @returns {string[][]}
+     */
     public getModules(): string[][] {
         const modules: string[][] = [];
 
@@ -131,6 +188,9 @@ export class Manifest {
         return modules;
     }
 
+    /**
+     * Save the manifest file
+     */
     public save() {
         this.saveManifest();
     }

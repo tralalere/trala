@@ -4,11 +4,19 @@ import * as semver from "semver";
 import {removeSync} from "fs-extra";
 import {executeSchematics} from "../../schematics";
 
+/**
+ *
+ */
 export class Install {
     static manifest: Manifest;
     static projectName: string;
 
-    static execute(args: string[], includeOnly: boolean) {
+    /**
+     *
+     * @param {string[]} args
+     * @param {boolean} includeOnly
+     */
+    public static execute(args: string[], includeOnly: boolean) {
         console.log('install', args);
 
         this.manifest = Manifest.getInstance();
@@ -37,7 +45,13 @@ export class Install {
         }
     }
 
-    static installModule(name: string, version?: string): string {
+    /**
+     *
+     * @param {string} name
+     * @param {string} version
+     * @returns {string}
+     */
+    public static installModule(name: string, version?: string): string {
         console.log('install module', name, version);
 
         const rootDir: string = process.cwd();
@@ -132,7 +146,11 @@ export class Install {
         return useVersion;
     }
 
-    static includeModule(name: string) {
+    /**
+     *
+     * @param {string} name
+     */
+    public static includeModule(name: string) {
         executeSchematics('trala', 'addModule', {name});
     }
 }

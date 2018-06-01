@@ -2,8 +2,15 @@ import { Install } from "./install";
 import { Remove } from "./remove";
 import { Manifest } from "../../manifest";
 
+/**
+ *
+ */
 export class Update {
-    static execute(args: string[]) {
+    /**
+     *
+     * @param {string[]} args
+     */
+    public static execute(args: string[]) {
         console.log('update', args);
 
         const manifest = Manifest.getInstance();

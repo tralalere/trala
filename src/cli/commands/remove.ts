@@ -2,8 +2,15 @@ import {Manifest} from "../../manifest";
 import {removeSync} from "fs-extra";
 import {executeSchematics} from "../../schematics";
 
+/**
+ *
+ */
 export class Remove{
-    static execute(args: string[]) {
+    /**
+     *
+     * @param {string[]} args
+     */
+    public static execute(args: string[]) {
         console.log('remove', args);
 
         const manifest = Manifest.getInstance();
@@ -16,7 +23,11 @@ export class Remove{
         manifest.removeModules(modules);
     }
 
-    static removeModule(name: string) {
+    /**
+     *
+     * @param {string} name
+     */
+    public static removeModule(name: string) {
         console.log('remove module', name);
 
         this.excludeModule(name);
@@ -24,7 +35,11 @@ export class Remove{
         removeSync(`src/app/@modules/${name}`);
     }
 
-    static excludeModule(name: string) {
+    /**
+     *
+     * @param {string} name
+     */
+    public static excludeModule(name: string) {
         executeSchematics('trala', 'removeModule', {name});
     }
 }

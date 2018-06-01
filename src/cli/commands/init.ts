@@ -2,8 +2,15 @@ import { Manifest } from "../../manifest";
 import {execSync} from "child_process";
 import {executeSchematics} from "../../schematics";
 
+/**
+ *
+ */
 export class Init {
-    static execute(args: string[]) {
+    /**
+     *
+     * @param {string[]} args
+     */
+    public static execute(args: string[]) {
         console.log('init', args);
 
         const cwd = process.cwd();
