@@ -53,7 +53,7 @@ export function addServiceToInstantiator(source: ts.SourceFile,
 
 export function listImports(source: ts.SourceFile,
                             fromPattern: string,
-                            removeImports: boolean): [string[], Change[]] {
+                            removeImports: boolean = false): [string[], Change[]] {
     const imports: string[] = [];
     const changes: Change[] = [];
     const nodes = getSourceNodes(source);
@@ -99,16 +99,18 @@ export function removeFromNgModule(source: ts.SourceFile,
 
                 arrayLiteral.elements.forEach(element => {
                     const position = element.pos - (element.pos > 0 && source.text[element.pos - 1] === ',' ? 1 : 0);
+                    const end = element.end + (position === element.pos && source.text[element.end] === ',' ? 1 : 0);
+
                     switch (element.kind) {
                         case ts.SyntaxKind.Identifier:
                             if (imports.indexOf((element as ts.Identifier).text) > -1) {
-                                changes.push(new RemoveChange(sourcePath, position, source.text.substring(position, element.end)));
+                                changes.push(new RemoveChange(sourcePath, position, source.text.substring(position, end)));
                             }
                             break;
                         case ts.SyntaxKind.PropertyAccessExpression:
                             const identifier = element.getText().split('.')[0];
                             if (imports.indexOf(identifier) > -1) {
-                                changes.push(new RemoveChange(sourcePath, position, source.text.substring(position, element.end)));
+                                changes.push(new RemoveChange(sourcePath, position, source.text.substring(position, end)));
                             }
                             break;
                     }
@@ -131,11 +133,12 @@ export function removeFromInstantiator(source: ts.SourceFile,
         return changes;
     }
 
-    // console.log(node.getText(source));
-
     node.parameters.forEach((parameter: ts.ParameterDeclaration) => {
+        const position = parameter.pos - (parameter.pos > 0 && source.text[parameter.pos - 1] === ',' ? 1 : 0);
+        const end = parameter.end + (position === parameter.pos && source.text[parameter.end] === ',' ? 1 : 0);
+
         if (imports.indexOf(parameter.type.getText(source)) > -1) {
-            changes.push(new RemoveChange(sourcePath, parameter.pos, source.text.substring(parameter.pos, parameter.end + (source.text[parameter.end] === ',' ? 1 : 0))));
+            changes.push(new RemoveChange(sourcePath, position, source.text.substring(position, end)));
         }
     });
 
