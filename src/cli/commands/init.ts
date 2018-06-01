@@ -1,5 +1,6 @@
 import { Manifest } from "../../manifest";
 import {execSync} from "child_process";
+import {executeSchematics} from "../../schematics";
 
 export class Init {
     static execute(args: string[]) {
@@ -32,6 +33,8 @@ export class Init {
 
         // TODO handle fuse-core clone as a parameter
         execSync(`git clone ${manifest.getRemoteUrl()}${manifest.getNamespace()}/fuse-core src/app/core`);
+
+        executeSchematics('trala', 'clearModules', {});
 
         manifest.save();
     }
