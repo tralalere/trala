@@ -3,12 +3,12 @@ import {removeSync} from "fs-extra";
 import {executeSchematics} from "../../schematics";
 
 /**
- *
+ * Implement Remove command
  */
 export class Remove{
     /**
-     *
-     * @param {string[]} args
+     * Perform a removal of a module
+     * @param {string[]} args (arguments)
      */
     public static execute(args: string[]) {
         console.log('remove', args);
@@ -24,8 +24,8 @@ export class Remove{
     }
 
     /**
-     *
-     * @param {string} name
+     * Remove the module from the filesystem
+     * @param {string} name (module name)
      */
     public static removeModule(name: string) {
         console.log('remove module', name);
@@ -36,8 +36,8 @@ export class Remove{
     }
 
     /**
-     *
-     * @param {string} name
+     * Remove all the imports of the module from other files
+     * @param {string} name (module name)
      */
     public static excludeModule(name: string) {
         executeSchematics('trala', 'removeModule', {name});

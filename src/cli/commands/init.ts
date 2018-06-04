@@ -3,11 +3,12 @@ import {execSync} from "child_process";
 import {executeSchematics} from "../../schematics";
 
 /**
- *
+ * Implement Init command
  */
 export class Init {
     /**
-     *
+     * Perform the initialisation of the project by initializing a git repo, pulling from the parent project,
+     * getting optional other repositories and cleaning all existing imports
      * @param {string[]} args
      */
     public static execute(args: string[]) {

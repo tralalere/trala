@@ -3,12 +3,12 @@ import { Remove } from "./remove";
 import { Manifest } from "../../manifest";
 
 /**
- *
+ * Implement Update command
  */
 export class Update {
     /**
-     *
-     * @param {string[]} args
+     * Perform an update on a module by removing it and installing it again
+     * @param {string[]} args (arguments)
      */
     public static execute(args: string[]) {
         console.log('update', args);

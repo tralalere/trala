@@ -5,16 +5,16 @@ import {removeSync} from "fs-extra";
 import {executeSchematics} from "../../schematics";
 
 /**
- *
+ * Implement Install and Include command
  */
 export class Install {
     static manifest: Manifest;
     static projectName: string;
 
     /**
-     *
-     * @param {string[]} args
-     * @param {boolean} includeOnly
+     * Perform the installation of a module
+     * @param {string[]} args (arguments)
+     * @param {boolean} includeOnly (selects if we install and import modules or only import)
      */
     public static execute(args: string[], includeOnly: boolean) {
         console.log('install', args);
@@ -46,10 +46,10 @@ export class Install {
     }
 
     /**
-     *
-     * @param {string} name
-     * @param {string} version
-     * @returns {string}
+     * Retrieve the git repo of the module, select the version and if needed create a branch specific to the project
+     * @param {string} name (module name)
+     * @param {string} version (module version)
+     * @returns {string} (actual version installed)
      */
     public static installModule(name: string, version?: string): string {
         console.log('install module', name, version);
@@ -147,8 +147,8 @@ export class Install {
     }
 
     /**
-     *
-     * @param {string} name
+     * Add imports of all modules and services into the project
+     * @param {string} name (module name)
      */
     public static includeModule(name: string) {
         executeSchematics('trala', 'addModule', {name});
