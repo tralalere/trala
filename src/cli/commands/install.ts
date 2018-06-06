@@ -42,6 +42,7 @@ export class Install {
         }
 
         modules = modules
+            .filter((module: string[]) => !pathExistsSync('src/app/@modules/' + module[0]))
             .map((module: string[]) => [module[0], this.installModule(module[0], module[1])])
             .filter((module: string[]) => !!module[1]);
 
