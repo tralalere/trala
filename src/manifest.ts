@@ -211,20 +211,20 @@ export class Manifest {
         const manifestRaw = readFileSync(this.manifestPath, { encoding: 'utf8' });
         this.manifestData = JSON.parse(manifestRaw);
 
-        console.log('Manifest loaded', this.manifestData);
+        // console.log('Manifest loaded', this.manifestData);
     }
 
     private loadManifestDefault() {
         const manifestBuilder = this.duplicateObject(defaultData);
         this.manifestData = manifestBuilder as ManifestFormat;
 
-        console.log('Default manifest loaded', this.manifestData);
+        // console.log('Default manifest loaded', this.manifestData);
     }
 
     private saveManifest() {
         writeFileSync(this.manifestPath, JSON.stringify(this.manifestData, null, 2), { encoding: 'utf8' });
 
-        console.log('Manifest saved', this.manifestData);
+        // console.log('Manifest saved', this.manifestData);
     }
 
     private duplicateObject(object: any): any {
