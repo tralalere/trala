@@ -14,9 +14,11 @@ trala init <project>
 Instanciate a project from a base project in a new folder.
 
 ```bash
-trala install <module>[@<version>]
+trala install [<module>[@<version>]]
 ```
 Add a module to the project from its remote git repository and import its modules and services into the base project. You can optionally specify a version. The latest version is installed by default.
+
+If no module is given, install all the modules present in the manifest. 
 
 ```bash
 trala update <module>[@<version>]
@@ -24,7 +26,7 @@ trala update <module>[@<version>]
 Update a module to the latest or specified version
 
 ```bash
-trala remvoe <module>
+trala remove <module>
 ```
 Remove a module from the project.
 
