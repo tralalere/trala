@@ -63,8 +63,8 @@ export class Install {
         let currentVersion: string;
         let useVersion: string;
 
-        execSync(`git clone ${this.manifest.getRemoteUrl()}${this.manifest.getNamespace()}/${name}-module src/app/@modules/${name}`);
-        // execSync(`git clone ${this.manifest.getRemoteUrl()}${this.manifest.getNamespace()}/module-${name}-front src/app/@modules/${name}`);
+        // execSync(`git clone ${this.manifest.getRemoteUrl()}${this.manifest.getNamespace()}/${name}-module src/app/@modules/${name}`);
+        execSync(`git clone ${this.manifest.getRemoteUrl()}${this.manifest.getNamespace()}/module-${name}-front src/app/@modules/${name}`);
         process.chdir(`src/app/@modules/${name}`);
 
         execSync('git fetch origin');
