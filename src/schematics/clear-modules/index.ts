@@ -66,7 +66,7 @@ function clearInstantiator(): Rule {
         const recorder = host.beginUpdate(classPath);
         for (const change of changes) {
             if (change instanceof RemoveChange) {
-                console.log(change.description);
+                // console.log(change.description);
                 recorder.remove(change.pos, change.toRemove.length);
             }
         }

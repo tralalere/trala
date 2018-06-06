@@ -17,7 +17,7 @@ export function addServiceToInstantiator(source: ts.SourceFile,
     let toInsert: string;
 
     if (!node || !node.parameters) {
-        console.log('No constructor node');
+        // console.log('No constructor node');
         return changes;
     }
 
@@ -25,7 +25,7 @@ export function addServiceToInstantiator(source: ts.SourceFile,
 
     const params = node.parameters.filter((parameter: ts.ParameterDeclaration) => parameter.type.getText() === serviceName);
     if (params.length > 0) {
-        console.log('Service already instantiated');
+        // console.log('Service already instantiated');
         return changes;
     }
 
@@ -129,7 +129,7 @@ export function removeFromInstantiator(source: ts.SourceFile,
     const node = nodes.filter((node: ts.Node) => node.kind === ts.SyntaxKind.Constructor )[0] as ts.ConstructorDeclaration;
 
     if (!node || !node.parameters) {
-        console.log('No constructor node');
+        // console.log('No constructor node');
         return changes;
     }
 

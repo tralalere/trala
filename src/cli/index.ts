@@ -57,7 +57,7 @@ export class CLI {
                 Remove.execute(this.arguments);
                 break;
             default:
-                console.log('no command, display help');
+                console.log('no command, display help (TODO)');
                 // display help
                 process.exit(0);
         }

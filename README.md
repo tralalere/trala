@@ -27,3 +27,15 @@ Update a module to the latest or specified version
 trala remvoe <module>
 ```
 Remove a module from the project.
+
+## TODO List
+* Create folder with init command, add --flat option to disable
+* Do an npm install after init
+* Add global config for where to look for remote git repos
+* Add command to retrieve a project from a remote
+* Clean data of octopus connector (defined endpoints)
+* Add command to version modules
+* Update package.json to change project name
+* Clean other files when init command (app.component.ts, is-user-logged.class.ts, main/toolbar/toolbar.component.ts)
+* Add configuration for module repo name
+* Add configuration for module location(s)

@@ -33,7 +33,7 @@ export function executeSchematics(collectionName: string, schematicsName: string
         }
     });
 
-    console.log(process.cwd());
+    // console.log(process.cwd());
 
     workflow.execute({
         collection: collectionName,
@@ -49,7 +49,7 @@ export function executeSchematics(collectionName: string, schematicsName: string
             }
         },
         complete() {
-            console.log('Workflow done !');
+            console.log('Workflow done!');
         }
     });
 };
