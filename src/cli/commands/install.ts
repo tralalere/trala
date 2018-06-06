@@ -1,7 +1,7 @@
 import { Manifest } from "../../manifest";
 import {execSync} from "child_process";
 import * as semver from "semver";
-import {removeSync} from "fs-extra";
+import {pathExistsSync, removeSync} from "fs-extra";
 import {executeSchematics} from "../../schematics";
 
 /**
@@ -29,6 +29,11 @@ export class Install {
         if (modules.length === 0) {
             updateManifest = false;
             modules = this.manifest.getModules();
+
+            if (!pathExistsSync('src/app/core')) {
+                // TODO handle fuse-core clone as a parameter
+                execSync(`git clone ${this.manifest.getRemoteUrl()}${this.manifest.getNamespace()}/fuse-core src/app/core -b develop`);
+            }
         }
 
         if (includeOnly) {
