@@ -40,7 +40,7 @@ export class Init {
         // TODO track master to origin/master
 
         // TODO handle fuse-core clone as a parameter
-        execSync(`git clone ${manifest.getRemoteUrl()}${manifest.getNamespace()}/fuse-core src/app/core`);
+        execSync(`git clone ${manifest.getRemoteUrl()}${manifest.getNamespace()}/fuse-core src/app/core -b develop`);
 
         executeSchematics('trala', 'clearModules', {});
 
