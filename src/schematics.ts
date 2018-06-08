@@ -49,7 +49,7 @@ export function executeSchematics(collectionName: string, schematicsName: string
             }
         },
         complete() {
-            console.log('Workflow done!');
+            // console.log('Workflow done!');
         }
     });
 };

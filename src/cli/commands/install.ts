@@ -17,8 +17,6 @@ export class Install {
      * @param {boolean} includeOnly (selects if we install and import modules or only import)
      */
     public static execute(args: string[], includeOnly: boolean) {
-        console.log('install', args);
-
         this.manifest = Manifest.getInstance();
         this.projectName = this.manifest.getProjectName().toLowerCase();
         let modules: string[][];
@@ -39,8 +37,8 @@ export class Install {
                 .split('\n')
                 .filter((remote: string) => remote === 'skeleton');
             if (remotes.length === 0) {
-                execSync(`git remote add skeleton ${this.manifest.getRemoteUrl()}${this.manifest.getNamespace()}/skeleton-front`);
-                execSync('git fetch skeleton');
+                execSync(`git remote add skeleton ${this.manifest.getRemoteUrl()}${this.manifest.getNamespace()}/skeleton-front`, {stdio: 'ignore'});
+                execSync('git fetch skeleton', {stdio: 'ignore'});
             }
         }
 
@@ -57,6 +55,8 @@ export class Install {
         if (updateManifest) {
             this.manifest.addModules(modules);
         }
+
+        console.log('Done!')
     }
 
     /**
@@ -66,7 +66,7 @@ export class Install {
      * @returns {string} (actual version installed)
      */
     public static installModule(name: string, version?: string): string {
-        console.log('install module', name, version);
+        console.log('Installing module', name, version);
 
         const rootDir: string = process.cwd();
         const branchName: string = `project-${this.projectName}`;
@@ -78,10 +78,10 @@ export class Install {
         let useVersion: string;
 
         // execSync(`git clone ${this.manifest.getRemoteUrl()}${this.manifest.getNamespace()}/${name}-module src/app/@modules/${name}`);
-        execSync(`git clone ${this.manifest.getRemoteUrl()}${this.manifest.getNamespace()}/module-${name}-front src/app/@modules/${name}`);
+        execSync(`git clone ${this.manifest.getRemoteUrl()}${this.manifest.getNamespace()}/module-${name}-front src/app/@modules/${name}`, {stdio: 'ignore'});
         process.chdir(`src/app/@modules/${name}`);
 
-        execSync('git fetch origin');
+        execSync('git fetch origin', {stdio: 'ignore'});
         branches = execSync('git branch -a', { encoding: 'utf8' })
             .split('\n')
             .filter((branch: string) => {
@@ -95,13 +95,13 @@ export class Install {
         }
 
         if (branchLocal) {
-            execSync(`git checkout ${branchName}`);
+            execSync(`git checkout ${branchName}`, {stdio: 'ignore'});
 
             if (branchPresent) {
-                execSync(`git pull origin/${branchName}`);
+                execSync(`git pull origin/${branchName}`, {stdio: 'ignore'});
             }
         } else if (branchPresent) {
-            execSync(`git checkout -b ${branchName} origin/${branchName}`);
+            execSync(`git checkout -b ${branchName} origin/${branchName}`, {stdio: 'ignore'});
             branchLocal = true;
         }
 
@@ -137,13 +137,13 @@ export class Install {
         if (useVersion) {
             if (useVersion !== currentVersion) {
                 if (!branchLocal) {
-                    execSync(`git checkout ${useVersion}`);
-                    execSync(`git branch ${branchName}`);
+                    execSync(`git checkout ${useVersion}`, {stdio: 'ignore'});
+                    execSync(`git branch ${branchName}`, {stdio: 'ignore'});
                 } else {
-                    execSync(`git merge ${useVersion}`);
+                    execSync(`git merge ${useVersion}`, {stdio: 'ignore'});
                 }
 
-                execSync(`git push -u origin ${branchName}`);
+                execSync(`git push -u origin ${branchName}`, {stdio: 'ignore'});
             }
         }
 

@@ -11,8 +11,6 @@ export class Update {
      * @param {string[]} args (arguments)
      */
     public static execute(args: string[]) {
-        console.log('update', args);
-
         const manifest = Manifest.getInstance();
         let modules: string[][];
 
@@ -27,5 +25,7 @@ export class Update {
         });
 
         manifest.updateModules(modules);
+
+        console.log('Done!');
     }
 }
