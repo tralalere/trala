@@ -34,6 +34,14 @@ export class Install {
                 // TODO handle fuse-core clone as a parameter
                 execSync(`git clone ${this.manifest.getRemoteUrl()}${this.manifest.getNamespace()}/fuse-core src/app/core -b develop`);
             }
+
+            const remotes = execSync('git remote', { encoding: 'utf8' })
+                .split('\n')
+                .filter((remote: string) => remote === 'skeleton');
+            if (remotes.length === 0) {
+                execSync(`git remote add skeleton ${this.manifest.getRemoteUrl()}${this.manifest.getNamespace()}/skeleton-front`);
+                execSync('git fetch skeleton');
+            }
         }
 
         if (includeOnly) {
