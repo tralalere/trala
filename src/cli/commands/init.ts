@@ -12,7 +12,7 @@ export class Init {
      * @param {string[]} args
      */
     public static execute(args: string[]) {
-        console.log('init', args);
+        console.log('Initializing project', args[0]);
 
         const cwd = process.cwd();
         const manifest = Manifest.getInstance();
@@ -27,23 +27,25 @@ export class Init {
         // TODO get data for manifest interactively (from console)
         manifest.setProjectName(projectName);
 
-        execSync('git init');
-        execSync(`git remote add skeleton ${manifest.getRemoteUrl()}${manifest.getNamespace()}/skeleton-front`);
-        execSync('git fetch skeleton');
-        execSync('git pull skeleton master');
-        execSync('git branch develop');
-        execSync('git checkout develop');
-        execSync('git pull skeleton develop');
+        execSync('git init', {stdio: 'ignore'});
+        execSync(`git remote add skeleton ${manifest.getRemoteUrl()}${manifest.getNamespace()}/skeleton-front`, {stdio: 'ignore'});
+        execSync('git fetch skeleton', {stdio: 'ignore'});
+        execSync('git pull skeleton master', {stdio: 'ignore'});
+        execSync('git branch develop', {stdio: 'ignore'});
+        execSync('git checkout develop', {stdio: 'ignore'});
+        execSync('git pull skeleton develop', {stdio: 'ignore'});
 
         // TODO create remote repository (Gitlab API) (POST, use private_token ?)
         // TODO add repository as origin remote
         // TODO track master to origin/master
 
         // TODO handle fuse-core clone as a parameter
-        execSync(`git clone ${manifest.getRemoteUrl()}${manifest.getNamespace()}/fuse-core src/app/core -b develop`);
+        execSync(`git clone ${manifest.getRemoteUrl()}${manifest.getNamespace()}/fuse-core src/app/core -b develop`, {stdio: 'ignore'});
 
         executeSchematics('trala', 'clearModules', {});
 
         manifest.save();
+
+        console.log('Done!');
     }
 }

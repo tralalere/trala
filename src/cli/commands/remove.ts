@@ -11,8 +11,6 @@ export class Remove{
      * @param {string[]} args (arguments)
      */
     public static execute(args: string[]) {
-        console.log('remove', args);
-
         const manifest = Manifest.getInstance();
         let modules: string[];
 
@@ -21,6 +19,8 @@ export class Remove{
         modules.forEach((module: string) => Remove.removeModule(module));
 
         manifest.removeModules(modules);
+
+        console.log('Done!');
     }
 
     /**
@@ -28,7 +28,7 @@ export class Remove{
      * @param {string} name (module name)
      */
     public static removeModule(name: string) {
-        console.log('remove module', name);
+        console.log('Removing module', name);
 
         this.excludeModule(name);
 
