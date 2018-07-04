@@ -68,6 +68,10 @@ export class Install {
     public static installModule(name: string, version?: string): string {
         console.log('Installing module', name, version);
 
+        if (!this.manifest) {
+            this.manifest = Manifest.getInstance();
+        }
+
         const rootDir: string = process.cwd();
         const branchName: string = `project-${this.projectName}`;
         let branches: string[];
