@@ -70,6 +70,7 @@ export class Install {
 
         if (!this.manifest) {
             this.manifest = Manifest.getInstance();
+            this.projectName = this.manifest.getProjectName().toLowerCase();
         }
 
         const rootDir: string = process.cwd();
