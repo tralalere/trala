@@ -1,6 +1,6 @@
 {
   "name": "trala",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "CLI tool for trala-modules",
   "scripts": {
     "start": " bin\\trala.cmd",
