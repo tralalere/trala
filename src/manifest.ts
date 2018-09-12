@@ -221,6 +221,14 @@ export class Manifest {
         // console.log('Default manifest loaded', this.manifestData);
     }
 
+    public reloadManifest() {
+        try {
+            this.loadManifest();
+        } catch (error) {
+            this.loadManifestDefault();
+        }
+    }
+
     private saveManifest() {
         const modules = {};
         Object.keys(this.manifestData.modules).sort().forEach((key) => {
