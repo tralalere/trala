@@ -66,7 +66,7 @@ export class Install {
      * @returns {string} (actual version installed)
      */
     public static installModule(name: string, version?: string): string {
-        console.log('Installing module', name, version);
+        console.log('Installing module', name, version?version:'latest');
 
         if (!this.manifest) {
             this.manifest = Manifest.getInstance();
