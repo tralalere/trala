@@ -19,7 +19,7 @@ export class Update {
         // TODO if no modules update all modules (?) (maybe not)
 
         modules.forEach((module) => {
-            Remove.removeModule(module[0]);
+            Remove.removeModule(module[0], true);
 
             Install.installModule(module[0], module[1]);
         });

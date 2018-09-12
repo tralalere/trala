@@ -27,10 +27,12 @@ export class Remove{
      * Remove the module from the filesystem
      * @param {string} name (module name)
      */
-    public static removeModule(name: string) {
+    public static removeModule(name: string, update?: boolean) {
         console.log('Removing module', name);
 
-        this.excludeModule(name);
+        if (!update) {
+            this.excludeModule(name);
+        }
 
         removeSync(`src/app/@modules/${name}`);
     }
