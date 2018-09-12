@@ -2,6 +2,7 @@ import { Install } from "./install";
 import { Remove } from "./remove";
 import { Manifest } from "../../manifest";
 import {execSync} from "child_process";
+import {existsSync} from "fs";
 
 /**
  * Implement Update command
@@ -37,8 +38,15 @@ export class Update {
 
             modules = this.manifest.getModules();
             modules.forEach((module) => {
-                this.updateRepository('src/app/@modules/'+module[0]);
-                console.log('Module', module[0], 'updated');
+                const modulePath = 'src/app/@modules/'+module[0];
+
+                if (existsSync(modulePath)) {
+                    this.updateRepository(modulePath);
+                    console.log('Module', module[0], 'updated');
+                } else {
+                    Install.installModule(module[0], module[1]);
+                    console.log('Module', module[0], 'installed');
+                }
             });
         }
 
