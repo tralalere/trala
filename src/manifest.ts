@@ -222,6 +222,12 @@ export class Manifest {
     }
 
     private saveManifest() {
+        const modules = {};
+        Object.keys(this.manifestData.modules).sort().forEach((key) => {
+            modules[key] = this.manifestData.modules[key];
+        });
+        this.manifestData.modules = modules;
+
         writeFileSync(this.manifestPath, JSON.stringify(this.manifestData, null, 2), { encoding: 'utf8' });
 
         // console.log('Manifest saved', this.manifestData);
