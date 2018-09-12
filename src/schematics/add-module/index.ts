@@ -37,7 +37,7 @@ function addDeclarationsToNgModule(options: ModuleOptions, modules: string[]): R
 
         for (const module of modules) {
             changes.push(...addImportToModule(source, modulePath,
-                strings.classify(module),
+                strings.classify(module)+'.forRoot()',
                 relativePath));
         }
 
