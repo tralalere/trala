@@ -28,11 +28,6 @@ export class Install {
             updateManifest = false;
             modules = this.manifest.getModules();
 
-            if (!pathExistsSync('src/app/core')) {
-                // TODO handle fuse-core clone as a parameter
-                execSync(`git clone ${this.manifest.getRemoteUrl()}${this.manifest.getNamespace()}/fuse-core src/app/core -b develop`);
-            }
-
             const remotes = execSync('git remote', { encoding: 'utf8' })
                 .split('\n')
                 .filter((remote: string) => remote === 'skeleton');
