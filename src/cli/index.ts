@@ -1,4 +1,4 @@
-import { Create, Init, Install, Update, Remove } from './commands';
+import { Create, Init, Install, Update, Remove, Sync } from './commands';
 
 /**
  * Handles operations for the command line
@@ -58,6 +58,9 @@ export class CLI {
                 break;
             case 'remove':
                 Remove.execute(this.arguments);
+                break;
+            case 'sync':
+                Sync.execute(this.arguments);
                 break;
             default:
                 console.log('no command, display help (TODO)');
