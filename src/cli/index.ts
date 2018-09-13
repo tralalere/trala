@@ -1,4 +1,4 @@
-import { Init, Install, Update, Remove } from './commands';
+import { Create, Init, Install, Update, Remove } from './commands';
 
 /**
  * Handles operations for the command line
@@ -41,6 +41,9 @@ export class CLI {
      */
     public selectCommand() {
         switch (this.command) {
+            case 'create':
+                Create.execute(this.arguments);
+                break;
             case 'init':
                 Init.execute(this.arguments);
                 break;
