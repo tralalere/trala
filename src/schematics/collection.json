@@ -6,6 +6,12 @@
       "description": "Add a Tralalere module.",
       "schema": "./add-module/schema.json"
     },
+    "baseModule": {
+      "aliases": [ "bm" ],
+      "factory": "./base-modules",
+      "description": "Create base template Tralalere module.",
+      "schema": "./base-modules/schema.json"
+    },
     "clearModules": {
       "aliases": [ "cm" ],
       "factory": "./clear-modules",
