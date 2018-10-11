@@ -1,6 +1,7 @@
 import {Manifest} from "../../manifest";
-import {existsSync} from "fs";
+import {existsSync, mkdirSync} from "fs";
 import {execSync} from "child_process";
+import {executeSchematics} from "../../schematics";
 
 /**
  * Implement Create command
@@ -23,8 +24,7 @@ export class Create {
 
         modules.forEach((moduleName: string) => {
             if (this.createModule(moduleName)) {
-                // TODO - Update to match branch setting rather than version
-                created.push([moduleName, '0.0.0']);
+                created.push([moduleName, 'develop']);
             }
         });
 
@@ -48,11 +48,25 @@ export class Create {
         // TODO - Create repository on remote server, then clone
         execSync(`git init ${path}`, {stdio: 'ignore'});
 
-        // TODO - Create folder core
-        // TODO - Generate modulename.module.ts
-        // TODO - Generate modulename.service.ts
-        // TODO - Generate index.ts
-        // TODO - Generate README.md
+        mkdirSync(`${path}/core`);
+        executeSchematics('@schematics/angular', 'module', {
+            project: 'fuse',
+            name: moduleName,
+            path: `src/app/@modules/${moduleName}/core`,
+            spec: false,
+            flat: true
+        });
+        executeSchematics('@schematics/angular', 'service', {
+            project: 'fuse',
+            name: moduleName,
+            path: `src/app/@modules/${moduleName}/core`,
+            spec: false,
+            flat: true
+        });
+        executeSchematics('trala', 'baseModule', {
+            name: moduleName,
+            path: path
+        });
 
         return true;
     }
