@@ -1,4 +1,4 @@
-import { Create, Init, Install, Update, Remove, Sync } from './commands';
+import { Create, Init, Install, Theme, Update, Remove, Sync } from './commands';
 
 /**
  * Handles operations for the command line
@@ -52,6 +52,9 @@ export class CLI {
                 break;
             case 'include':
                 Install.execute(this.arguments, true);
+                break;
+            case 'theme':
+                Theme.execute(this.arguments);
                 break;
             case 'update':
                 Update.execute(this.arguments);
