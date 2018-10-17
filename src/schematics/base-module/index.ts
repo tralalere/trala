@@ -97,19 +97,19 @@ function addInitializationToService(options: ModuleOptions, services: string[]):
 export default function (options: ModuleOptions): Rule {
     return (host: Tree, context: SchematicContext) => {
       const templateSource = apply(url('./files'), [
-        options.routing ? noop() : filter(path => !path.endsWith('-routing.module.ts')),
-        template({
-          ...strings,
-          'if-flat': (s: string) => options.flat ? '' : s,
-          ...options,
-        }),
-        move(parsedPath.path),
+        // options.routing ? noop() : filter(path => !path.endsWith('-routing.module.ts')),
+        // template({
+        //   ...strings,
+        //   'if-flat': (s: string) => options.flat ? '' : s,
+        //   ...options,
+        // }),
+        // move(parsedPath.path),
       ]);
 
         return chain([
             branchAndMerge(chain([
-                addDeclarationsToNgModule(options, modules),
-                addInitializationToService(options, services)
+                // addDeclarationsToNgModule(options, modules),
+                // addInitializationToService(options, services)
             ])),
         ])(host, context);
     };
