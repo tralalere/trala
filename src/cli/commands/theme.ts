@@ -70,7 +70,8 @@ export class Theme {
     // Edit src/app/settings.ts
     const settingsPath = `${basePath}src/app/settings.ts`;
     const settings = readFileSync(settingsPath, { encoding: 'utf-8' });
-    const newSettings = settings.replace(/(export.*brand[^'"]*['"])([^'"]*)([^;];)/g, `$1${themeName}$3`);
+    let newSettings = settings.replace(/(export.*brand[^'"]*['"])([^'"]*)([^;];)/g, `$1${themeName}$3`);
+    newSettings = newSettings.replace(/(export.*from.*settings\/)([^'"]*)([^;];)/g, `$1${themeName}$3`);
 
     writeFileSync(settingsPath, newSettings, { encoding: 'utf-8' });
 
