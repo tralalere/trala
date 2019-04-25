@@ -90,6 +90,8 @@ export function removeFromNgModule(source: ts.SourceFile,
     const changes: Change[] = [];
     const decorator: ts.ObjectLiteralExpression = getDecoratorMetadata(source, 'NgModule', '@angular/core')[0] as ts.ObjectLiteralExpression;
 
+    // TODO take into account the fact that modules are imported with a forRoot()
+
     if (decorator) {
         decorator.properties
             .filter(node => node.kind === ts.SyntaxKind.PropertyAssignment)

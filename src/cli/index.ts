@@ -65,6 +65,9 @@ export class CLI {
             case 'sync':
                 Sync.execute(this.arguments);
                 break;
+            case 'version':
+                console.log('v0.1.17');
+                break;
             default:
                 console.log('no command, display help (TODO)');
                 // display help

@@ -129,7 +129,7 @@ export class Install {
             useVersion = currentVersion;
         } else {
             if (tags.length) {
-                useVersion = tags.pop();
+                useVersion = <string>(semver.sort(tags).pop());
             }
         }
 
