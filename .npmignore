@@ -11,6 +11,7 @@ src/
 !*.metadata.json
 !dist/*.js
 !bin/*
+token.json
 
 #################
 ## JetBrains
