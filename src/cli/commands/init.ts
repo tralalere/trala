@@ -12,8 +12,6 @@ export class Init {
      * @param {string[]} args
      */
     public static execute(args: string[]) {
-        console.log('Initializing project', args[0]);
-
         const cwd = process.cwd();
         const manifest = Manifest.getInstance();
         let projectName = args[0];
@@ -23,6 +21,8 @@ export class Init {
         if (!projectName) {
             projectName = cwd.substr(cwd.lastIndexOf('\\') + 1);
         }
+
+        console.log('Initializing project', projectName);
 
         // TODO get data for manifest interactively (from console)
         manifest.setProjectName(projectName);
