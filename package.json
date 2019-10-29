@@ -21,6 +21,7 @@
     "semver": "^5.5.0"
   },
   "devDependencies": {
-    "@types/node": "^9.6.18"
+    "@types/node": "^9.6.53",
+    "typescript": "^3.6.4"
   }
 }
