@@ -1,4 +1,4 @@
-import { Create, Init, Install, Theme, Update, Remove, Sync } from './commands';
+import {Create, Init, Install, Theme, Update, Remove, Sync, Version, Help} from './commands';
 
 /**
  * Handles operations for the command line
@@ -66,11 +66,19 @@ export class CLI {
                 Sync.execute(this.arguments);
                 break;
             case 'version':
-                console.log('v0.1.18');
+                Version.execute(this.arguments);
                 break;
+            case '-v':
+            case '--version':
+                console.log('v0.1.19');
+                break;
+            case 'help':
+                if (this.arguments.length) {
+                    Help.execute(this.arguments);
+                    break;
+                }
             default:
-                console.log('no command, display help (TODO)');
-                // display help
+                Help.displayHelp();
                 process.exit(0);
         }
     }
