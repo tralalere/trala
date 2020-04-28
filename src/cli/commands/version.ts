@@ -130,8 +130,6 @@ export class Version {
 
                     if (branchTimestamp > versionTimestamp) {
                         if (this.options.merge) {
-                            console.log(module, 'merging branch', this.options.sourceBranche, 'into master');
-
                             if (branches.some((branch: string) => branch.indexOf('master') === 2)) {
                                 execSync(`git checkout master`, {stdio: 'ignore'});
                                 execSync(`git pull origin master`, {stdio: 'ignore'});
@@ -143,14 +141,14 @@ export class Version {
                         }
 
                         execSync(`git tag ${semver.inc(baseModuleVersion, <ReleaseType>this.action)}`, {encoding: 'utf8'});
+
+                        console.log(module, this.action, 'done', this.options.merge ? '(merged into master)' : '(on branch' + this.options.sourceBranche + ')', ', new version is', semver.inc(baseModuleVersion, <ReleaseType>this.action));
                     } else {
-                        console.log(module, 'nothing to version');
+                        console.log(module, 'nothing new, latest version is', baseModuleVersion);
                     }
                 }
 
                 process.chdir(rootDir);
-
-                console.log('Done!');
             }
         });
     }
