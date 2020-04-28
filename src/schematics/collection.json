@@ -8,9 +8,9 @@
     },
     "baseModule": {
       "aliases": [ "bm" ],
-      "factory": "./base-modules",
+      "factory": "./base-module",
       "description": "Create base template Tralalere module.",
-      "schema": "./base-modules/schema.json"
+      "schema": "./base-module/schema.json"
     },
     "clearModules": {
       "aliases": [ "cm" ],
