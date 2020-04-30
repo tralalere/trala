@@ -70,7 +70,7 @@ export class CLI {
                 break;
             case '-v':
             case '--version':
-                console.log('v0.1.19');
+                console.log('v0.1.21');
                 break;
             case 'help':
                 if (this.arguments.length) {
