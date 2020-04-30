@@ -98,8 +98,6 @@ export class Version {
                     baseModuleVersion = <string>(semver.sort(tags).pop())
                 }
 
-                console.log(module, 'doing a', this.action, 'from version', baseModuleVersion, 'to version', semver.inc(baseModuleVersion, <ReleaseType>this.action));
-
                 branches = execSync('git branch -a', { encoding: 'utf8' })
                     .split('\n');
 
@@ -137,7 +135,7 @@ export class Version {
                                 execSync(`git checkout -b master origin/master`, {stdio: 'ignore'});
                             }
 
-                            execSync(`git merge ${this.options.sourceBranche}`, {encoding: 'utf8'})
+                            execSync(`git merge ${this.options.sourceBranche}`, {encoding: 'utf8'});
                         }
 
                         execSync(`git tag ${semver.inc(baseModuleVersion, <ReleaseType>this.action)}`, {encoding: 'utf8'});
