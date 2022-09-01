@@ -1,4 +1,4 @@
-import { Create, Init, Install, Theme, Update, Remove, Sync } from './commands';
+import {Create, Init, Install, Theme, Update, Remove, Sync, Help, Version} from './commands';
 const packageJson = require('../../package.json');
 
 /**
@@ -71,7 +71,7 @@ export class CLI {
                 break;
             case '-v':
             case '--version':
-                console.log('v0.1.21');
+                console.log(packageJson.version);
                 break;
             case 'help':
                 if (this.arguments.length) {
