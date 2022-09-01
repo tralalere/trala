@@ -1,6 +1,6 @@
 {
   "name": "trala",
-  "version": "0.1.21",
+  "version": "0.1.22",
   "description": "CLI tool for trala-modules",
   "scripts": {
     "start": " bin\\trala.cmd",
@@ -8,7 +8,7 @@
     "watch": "tsc -w"
   },
   "license": "ISC",
-  "bin": "bin/trala.js",
+  "bin": "dist/index.js",
   "schematics": "./dist/schematics/collection.json",
   "dependencies": {
     "@angular-devkit/core": "^0.6.7",

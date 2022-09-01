@@ -26,22 +26,34 @@ export class Theme {
     const angularManifest = JSON.parse(readFileSync(angularManifestPath, { encoding: 'utf-8' }));
     const buildOptions = angularManifest.projects.fuse.architect.build.options;
 
-    buildOptions.assets = buildOptions.assets.map((path: string) => {
-      const pattern = 'src/assets/';
-      const patternIndex = path.indexOf(pattern);
+    buildOptions.assets = buildOptions.assets.map((path: string | object) => {
+      const updatePathWithTheme = (p: string) => {
+        let newPath = p;
+        const pattern = 'src/assets/';
+        const patternIndex = p.indexOf(pattern);
 
-      if (patternIndex > -1) {
-        const slashIndex = path.indexOf('/', patternIndex + pattern.length);
-        let newPath = path.slice(0, patternIndex + pattern.length) + themeName;
+        if (patternIndex > -1) {
+          const slashIndex = p.indexOf('/', patternIndex + pattern.length);
+          newPath = p.slice(0, patternIndex + pattern.length) + themeName;
 
-        if (slashIndex > -1) {
-          newPath += path.slice(slashIndex);
+          if (slashIndex > -1) {
+            newPath += p.slice(slashIndex);
+          }
         }
 
         return newPath;
       }
 
-      return path;
+      if(typeof path === 'string') {
+        return updatePathWithTheme(path)
+      } else {
+        let newPath = {}
+        for (const key in path) {
+          newPath[key] = updatePathWithTheme(path[key]);
+        }
+
+        return newPath;
+      }
     });
 
     writeFileSync(angularManifestPath, JSON.stringify(angularManifest, null, '    ')+'\n', { encoding: 'utf-8' });
