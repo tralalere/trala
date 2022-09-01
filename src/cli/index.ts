@@ -1,4 +1,5 @@
 import { Create, Init, Install, Theme, Update, Remove, Sync } from './commands';
+const packageJson = require('../../package.json');
 
 /**
  * Handles operations for the command line
@@ -66,7 +67,7 @@ export class CLI {
                 Sync.execute(this.arguments);
                 break;
             default:
-                console.log('no command, display help (TODO)');
+                console.log('no command, display help (TODO)', packageJson.version);
                 // display help
                 process.exit(0);
         }
