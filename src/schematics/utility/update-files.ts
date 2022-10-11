@@ -87,8 +87,6 @@ export function listImports(source: ts.SourceFile,
 export function removeFromNgModule(source: ts.SourceFile,
                                    sourcePath: string,
                                    imports: string[]): Change[] {
-
-
     const changes: Change[] = [];
     getSourceNodes(source)
         .filter(node => node.kind === ts.SyntaxKind.PropertyAssignment)
