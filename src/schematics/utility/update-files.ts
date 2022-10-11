@@ -5,13 +5,13 @@ import {decamelize} from "@angular-devkit/core/src/utils/strings";
 import {insertImport} from "@schematics/angular/utility/route-utils";
 
 export function addServiceToInstantiator(source: ts.SourceFile,
-                                        classPath: string,
-                                        serviceName: string,
-                                        importPath: string | null = null): Change[] {
+                                         classPath: string,
+                                         serviceName: string,
+                                         importPath: string | null = null): Change[] {
     const changes: Change[] = [];
     const serviceVar = decamelize(serviceName);
     const nodes = getSourceNodes(source);
-    const node = nodes.filter((node: ts.Node) => node.kind === ts.SyntaxKind.Constructor )[0] as ts.ConstructorDeclaration;
+    const node = nodes.filter((node: ts.Node) => node.kind === ts.SyntaxKind.Constructor)[0] as ts.ConstructorDeclaration;
 
     let position: number;
     let toInsert: string;
@@ -86,22 +86,20 @@ export function listImports(source: ts.SourceFile,
 
 export function removeFromNgModule(source: ts.SourceFile,
                                    sourcePath: string,
-                                   imports: string[]) : Change[] {
+                                   imports: string[]): Change[] {
     const changes: Change[] = [];
-    const decorator: ts.ObjectLiteralExpression = getDecoratorMetadata(source, 'NgModule', '@angular/core')[0] as ts.ObjectLiteralExpression;
-
-    // TODO take into account the fact that modules are imported with a forRoot()
-
-    if (decorator) {
-        decorator.properties
-            .filter(node => node.kind === ts.SyntaxKind.PropertyAssignment)
-            .filter((node: ts.PropertyAssignment) => node.initializer.kind === ts.SyntaxKind.ArrayLiteralExpression)
-            .forEach((node: ts.PropertyAssignment) => {
+    getSourceNodes(source)
+        .filter(node => node.kind === ts.SyntaxKind.PropertyAssignment)
+        .filter((node: ts.PropertyAssignment) => node.initializer.kind === ts.SyntaxKind.ArrayLiteralExpression)
+        .forEach((node: ts.PropertyAssignment) => {
+            if (node.name.getText() === 'imports') {
                 const arrayLiteral = node.initializer as ts.ArrayLiteralExpression;
 
                 arrayLiteral.elements.forEach(element => {
+
                     const position = element.pos - (element.pos > 0 && source.text[element.pos - 1] === ',' ? 1 : 0);
                     const end = element.end + (position === element.pos && source.text[element.end] === ',' ? 1 : 0);
+
 
                     switch (element.kind) {
                         case ts.SyntaxKind.Identifier:
@@ -109,7 +107,14 @@ export function removeFromNgModule(source: ts.SourceFile,
                                 changes.push(new RemoveChange(sourcePath, position, source.text.substring(position, end)));
                             }
                             break;
+                        case ts.SyntaxKind.CallExpression:
+                            if (imports.indexOf(element['expression']['expression']['escapedText']) > -1) {
+
+                                changes.push(new RemoveChange(sourcePath, position, source.text.substring(position, end)));
+                            }
+                            break;
                         case ts.SyntaxKind.PropertyAccessExpression:
+
                             const identifier = element.getText().split('.')[0];
                             if (imports.indexOf(identifier) > -1) {
                                 changes.push(new RemoveChange(sourcePath, position, source.text.substring(position, end)));
@@ -117,8 +122,8 @@ export function removeFromNgModule(source: ts.SourceFile,
                             break;
                     }
                 });
-            });
-    }
+            }
+        });
 
     return changes;
 }
@@ -128,7 +133,7 @@ export function removeFromInstantiator(source: ts.SourceFile,
                                        imports: string[]): Change[] {
     const changes: Change[] = [];
     const nodes = getSourceNodes(source);
-    const node = nodes.filter((node: ts.Node) => node.kind === ts.SyntaxKind.Constructor )[0] as ts.ConstructorDeclaration;
+    const node = nodes.filter((node: ts.Node) => node.kind === ts.SyntaxKind.Constructor)[0] as ts.ConstructorDeclaration;
 
     if (!node || !node.parameters) {
         // console.log('No constructor node');
